@@ -23,13 +23,14 @@ public class MovieDisplayAdapter extends ArrayAdapter<MovieData> {
 
     public View getView(int position,View convertView, ViewGroup parent){
         MovieData moviedata=getItem(position);
-        String url="http://image.tmdb.org/t/p/w185"+moviedata.getImgPath();
+    String url="http://image.tmdb.org/t/p/w185"+moviedata.getImgPath();
 
-            convertView=LayoutInflater.from(getContext()).inflate(R.layout.diplay_img,parent,false);
+            if(convertView==null)
+            {
+                convertView=LayoutInflater.from(getContext()).inflate(R.layout.diplay_img,parent,false);
+            }
         ImageView mImg=(ImageView) convertView.findViewById(R.id.movie_poster);
-        Picasso.with(getContext()).load(url).into(mImg);
-
-
+   Picasso.with(getContext()).load(url.trim()).error(R.drawable.cupcake).into(mImg);
     return convertView;
     }
 }

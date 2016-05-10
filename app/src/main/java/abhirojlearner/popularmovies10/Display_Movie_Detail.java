@@ -11,11 +11,13 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 
-public class Display_Movie_Detail extends ActionBarActivity {
+public class Display_movie_detail extends ActionBarActivity {
 
     public final String IMGID="IMGID";
     public final String mTitle="mTitle";
     public final String mPlot="mPlot";
+    public final String mRelDate="reldate";
+    public final String mVotAvg="votavg";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,15 +25,26 @@ public class Display_Movie_Detail extends ActionBarActivity {
 
 
         Intent i=getIntent();
-        String imageId="http://image.tmdb.org/t/p/w185"+i.getStringExtra(IMGID);
-        String mtitle=i.getStringExtra(mTitle);
+        String imageId="http://image.tmdb.org/t/p/w500"+i.getStringExtra(IMGID);
         String mPlota=i.getStringExtra(mPlot);
+        String mtitle=i.getStringExtra(mTitle);
+        String vot=i.getStringExtra(mVotAvg);
+        String rel_date=i.getStringExtra(mRelDate);
         ImageView imgView=(ImageView) findViewById(R.id.poster);
+        String s[]=rel_date.split("-");
+        String day=s[2];
+        String month=s[1];
+        String year=s[0];
+        rel_date=day+"/"+month+"/"+year;
         Picasso.with(this).load(imageId).into(imgView);
         TextView tv=(TextView) findViewById(R.id.Movie_Title);
-        TextView movie_plot=(TextView) findViewById(R.id.Movie_plot);
         tv.setText(mtitle);
-        movie_plot.setText(mPlota);
+        TextView mPlo=(TextView) findViewById(R.id.Movie_Plot);
+        mPlo.setText("Synopsis:\n"+mPlota);
+        TextView mrd=(TextView) findViewById(R.id.Movie_relDate);
+        mrd.setText("Released On:\n"+rel_date);
+        TextView mvga=(TextView) findViewById(R.id.Movie_votAvg);
+        mvga.setText("Rating:\n"+vot+"/10");
 
     }
 

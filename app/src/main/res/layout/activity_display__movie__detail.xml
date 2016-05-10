@@ -1,31 +1,52 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="match_parent"
+    android:layout_width="match_parent"><LinearLayout
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="abhirojlearner.popularmovies10.Display_Movie_Detail">
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin1"
+    android:paddingRight="@dimen/activity_horizontal_margin1"
+    android:paddingTop="@dimen/activity_vertical_margin1"
+    android:paddingBottom="@dimen/activity_vertical_margin1"
+    android:orientation="vertical"
+    tools:context="abhirojlearner.popularmovies10.Display_movie_detail">
 
-    <ImageView android:id="@+id/poster" android:layout_width="wrap_content"
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:id="@+id/Movie_Title"
+     android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/title_size"
+        />
+
+    <ImageView android:id="@+id/poster" android:layout_width="match_parent"
+        android:padding="@dimen/display_paddding"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center_horizontal"
+        />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Movie_Plot"
+        android:textSize="@dimen/content_size"
+        android:layout_gravity="center_horizontal"
         />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/Movie_Title"
-        android:layout_below="@+id/poster"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/Movie_plot"
-        android:layout_below="@+id/Movie_Title"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/Movie_rating"
-        android:layout_below="@+id/Movie_plot"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Movie_relDate"
+        android:textSize="@dimen/content_size"
+       android:layout_gravity="center_horizontal"/>
 
-
-</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Movie_votAvg"
+        android:textSize="@dimen/content_size"
+        android:layout_gravity="center_horizontal"
+       />
+</LinearLayout>
+</ScrollView>

@@ -10,9 +10,20 @@ public class MovieData {
     String vote_avg;
     String plotsynop;
     String imgPath;
+    String backgroungUrl;
     public void setmmTitle(String title)
     {
         mTitle=title;
+    }
+
+    public void setBackgroungUrl(String burl)
+    {
+        backgroungUrl=burl;
+    }
+
+    public String getBackgroungUrl()
+    {
+        return backgroungUrl;
     }
 
     public String getmmTitle()

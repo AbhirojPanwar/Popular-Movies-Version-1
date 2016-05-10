@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,18 +37,69 @@ public class MovieGridFrag extends Fragment {
     public final String IMGID="IMGID";
     public final String mTitle="mTitle";
     public final String mPlot="mPlot";
+    public final String mRelDate="reldate";
+    public final String mVotAvg="votavg";
+    public String sorter;
     public MovieGridFrag() {
     }
-    View rootView;
+    public View rootView;
+    public GridView moviegrid;
+    public MovieDisplayAdapter mAdapter;
+    public List<MovieData> movieDataList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+setHasOptionsMenu(true);
          rootView = inflater.inflate(R.layout.fragment_main, container, false);
-         FetchDataTask datain=new FetchDataTask();
+         if(sorter==null)
+             sorter="popular";
+
+        moviegrid=(GridView) rootView
+                .findViewById(R.id.movie_display);
+        FetchDataTask datain=new FetchDataTask();
       datain.execute();
 
+              return rootView;
+    }
 
-        return rootView;
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_main_act, menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_popularity) {
+      if(sorter!="popular")
+      {
+          sorter="popular";
+          FetchDataTask dataTask=new FetchDataTask();
+          dataTask.execute();
+      }
+          return true;
+        }
+
+        if(id==R.id.action_voter)
+        {
+            if(sorter!="vote_average.desc")
+            {
+                sorter="top_rated";
+                FetchDataTask dataTask=new FetchDataTask();
+                dataTask.execute();
+
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public  class FetchDataTask extends AsyncTask<Void,Void,Void>
@@ -60,8 +114,7 @@ public class MovieGridFrag extends Fragment {
             String moviejson=null;
             try{
 
-                URL url=new URL("https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=98ee66ec333fc7b3902c1f87cbfea17a".trim());
-                Log.v(TAG, "This is the URL" + url.toString());
+                URL url=new URL("https://api.themoviedb.org/3/movie/"+sorter+"?api_key=98ee66ec333fc7b3902c1f87cbfea17a".trim());
                 connect=(HttpURLConnection)url.openConnection();
                 connect.setRequestMethod("GET");
                 connect.connect();
@@ -79,9 +132,6 @@ public class MovieGridFrag extends Fragment {
                 if(buffer.length()==0) return null;
 
                 moviejson=buffer.toString();
-
-                Log.v(TAG,moviejson);
-
                 moviedata= FillMovieData(moviejson);
                 if(moviedata.length==0) return null;
 
@@ -91,7 +141,7 @@ public class MovieGridFrag extends Fragment {
                 Log.e(TAG,"Malformed URL",e);
                 return null;
             } catch (IOException e) {
-                Log.e(TAG,"IOError,e");
+                Log.e(TAG,"IOError",e);
                 return null;
             }
 
@@ -116,25 +166,28 @@ public class MovieGridFrag extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            List<MovieData> movieDataList= Arrays.asList(moviedata);
-            MovieDisplayAdapter mAdapter=new MovieDisplayAdapter(getActivity(),movieDataList);
-            GridView moviegrid=(GridView) rootView
-                    .findViewById(R.id.movie_display);
 
+            movieDataList= Arrays.asList(moviedata);
+            mAdapter=new MovieDisplayAdapter(getActivity(),movieDataList);
+
+            mAdapter.notifyDataSetChanged();
             moviegrid.setAdapter(mAdapter);
             moviegrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent i=new Intent(getActivity(),Display_Movie_Detail.class);
+                    Intent i=new Intent(getActivity(),Display_movie_detail.class);
 
-                    i.putExtra(IMGID,moviedata[position].imgPath);
+                    i.putExtra(IMGID,moviedata[position].getBackgroungUrl());
                     i.putExtra(mTitle,moviedata[position].getmmTitle());
                     i.putExtra(mPlot,moviedata[position].getPlotsynop());
+                    i.putExtra(mRelDate,moviedata[position].getmRelDate());
+                    i.putExtra(mVotAvg,moviedata[position].getVoteAvg());
                     startActivity(i);
                 }
             });
+
+
         }
 
 
@@ -155,6 +208,8 @@ public class MovieGridFrag extends Fragment {
                     String reldate=posres.optString("release_date");
                     String title=posres.optString("title");
                     String voteavg=posres.optString("vote_average");
+                    String burl=posres.optString("backdrop_path");
+                    movie.setBackgroungUrl(burl);
                     movie.setImgPath(posterpath);
                     movie.setmmTitle(title);
                     movie.setmRelDate(reldate);
@@ -171,4 +226,5 @@ public class MovieGridFrag extends Fragment {
 
 
     }
+
 }
