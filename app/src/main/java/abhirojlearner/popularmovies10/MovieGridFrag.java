@@ -105,6 +105,8 @@ setHasOptionsMenu(true);
     public  class FetchDataTask extends AsyncTask<Void,Void,Void>
     {
 
+     final String your_key_here="";
+
         final String TAG=FetchDataTask.class.getSimpleName();
         @Override
         protected Void doInBackground(Void... params) {
@@ -114,7 +116,7 @@ setHasOptionsMenu(true);
             String moviejson=null;
             try{
 
-                URL url=new URL("https://api.themoviedb.org/3/movie/"+sorter+"?api_key=98ee66ec333fc7b3902c1f87cbfea17a".trim());
+                URL url=new URL("https://api.themoviedb.org/3/movie/"+sorter+"?api_key="+your_key_here.trim());
                 connect=(HttpURLConnection)url.openConnection();
                 connect.setRequestMethod("GET");
                 connect.connect();
